@@ -1,0 +1,104 @@
+<html>
+<head>
+	<title>Water Right Allocations for California</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="bower_components/animate.css/animate.min.css" />
+
+
+
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/handlebars/handlebars.min.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="js/query.js"></script>
+
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+    
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart', 'table']});
+      google.setOnLoadCallback(ready);
+  </script>
+  <style>
+    #response-links {
+      text-align: center;
+    }
+    #response-links a {
+      margin: 10px;
+    }
+  </style>
+
+</head>
+<body style="padding: 0 20px">
+
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" >Water Right Allocations for California</a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+       <ul class="nav navbar-nav navbar-right">
+          <li><a href="index.html"><i class="fa fa-share"></i> Map</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+
+  <h1 style="margin: 70px 0 20px 0; text-align:center">Query Database</h1>
+
+  <div class="form-horizontal" role="form" style="margin-bottom:20px" >
+    <div class="form-group">
+      <label for="table" class="col-sm-2 control-label">Table</label>
+      <div class="col-sm-9">
+        <select id="table" class="input form-control">
+          <option value="demand">Demand</option>
+          <option value="supply">Supply</option>
+          <option value="allocation">Allocation</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="watershed" class="col-sm-2 control-label">Watershed</label>
+      <div class="col-sm-9">
+        <select id="watershed" class="input form-control"></select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="date" class="col-sm-2 control-label">Date</label>
+      <div class="col-sm-9">
+        <input type="date" id="date" class="form-control input" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="query" class="col-sm-2 control-label">Query</label>
+      <div class="col-sm-9">
+        <input type="text" id="query" class="form-control input" value="SELECT *" />
+        <p class="help-block">Do not include a FROM clause, this will be filled in for you based on options above. 
+          <a href="https://developers.google.com/chart/interactive/docs/querylanguage#Language_Syntax" target="_blank">Query Langauge Help</a></p>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button class="btn btn-primary disabled" id="exec">Loading...</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="response"></div>
+
+	
+</body>
+</html>

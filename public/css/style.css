@@ -1,0 +1,53 @@
+body {
+	overflow: hidden;
+}
+
+.navbar.navbar-default {
+	margin: 0px !important;
+	border-radius: 0px !important;
+	-moz-border-radius: 0px !important;
+	-webkit-border-radius: 0px !important;
+	background-color: rgba(248,248,248,.8) !important;
+
+	border-bottom: 1px solid #888;
+	box-shadow: 0 0 5px #888;
+}
+
+.btn-link {
+	color : #666;
+}
+
+.btn-link:hover {
+	color : #333;
+}
+
+.leaflet-control-zoom {
+	margin-top: 65px !important;
+}
+
+.info-box {
+	padding: 15px;
+}
+
+.info-popup {
+	overflow: auto;
+	position : absolute;
+	right: 15px;
+	top  : 65px;
+
+	width : 38%;
+	max-width: 500px;
+
+	border: 1px solid #888;
+	box-shadow: 0 0 5px #888;
+
+	background-color: rgba(248,248,248,.8);
+}
+
+@media (max-width: 768px) {
+    .info-popup {
+		right : 5px;
+		width : 300px;
+		padding: 5px;
+	}
+}

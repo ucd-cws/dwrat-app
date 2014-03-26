@@ -14,11 +14,12 @@ var allData = [];
 
 var markerTemplate = 
 	'<div class="spacer"></div>'+
-	'<h3>Water Right #: {{application_number}}</h3>'+
+	'<h3>Water Right/Claim #: {{application_number}}</h3>'+
 	'<div style="margin:15px">'+
 		'<b>For:</b> {{date}}<br />'+
 		'<b>Allocation:</b> {{allocation}} [Ac-ft/day]<br />'+
 		'<b>Demand:</b> {{demand}} [Ac-ft/day]'+
+		'<br /><b>Percent: </b>{{ratio}}%<br />'+
 		'<div class="well well-sm" style="margin-top:5px">'+
 		'{{water_right_type}}<br />'+
 		'<b>Priority Date:</b> {{priority_date}}'+
@@ -28,6 +29,24 @@ var markerTemplate =
 
 var markers = {
 	riparian : {
+		allocated : {
+	    	radius      : 9,
+	    	fillColor   : "#2525C9",
+	    	color       : "#333",
+	    	weight      : 1,
+	    	opacity     : 1,
+	    	fillOpacity : .8,
+		},
+		unallocated : {
+			radius      : 9,
+	    	fillColor   : "#fff",
+	    	color       : "#333",
+	    	weight      : 1,
+	    	opacity     : 1,
+	    	fillOpacity : .3,
+		}
+	},
+	application : {
 		allocated : {
 	    	radius      : 9,
 	    	fillColor   : "#2525C9",
@@ -47,24 +66,6 @@ var markers = {
 	    	fillOpacity : .3,
 	    	sides       : 4,
 			rotate      : 45
-		}
-	},
-	application : {
-		allocated : {
-	    	radius      : 9,
-	    	fillColor   : "#2525C9",
-	    	color       : "#333",
-	    	weight      : 1,
-	    	opacity     : 1,
-	    	fillOpacity : .8
-		},
-		unallocated : {
-			radius      : 9,
-	    	fillColor   : "#fff",
-	    	color       : "#333",
-	    	weight      : 1,
-	    	opacity     : 1,
-	    	fillOpacity : .3
 		}
 	}
 }
@@ -171,9 +172,21 @@ function onDataLoad(response) {
     var points = [];
     for( var i = 0; i < data.getNumberOfRows(); i++ ) {
     	for( var j = 0; j < data.getNumberOfColumns(); j++ ) {
-	        if( columnMap[j] == 'geojson' ) points.push(JSON.parse(data.getValue(i, j)));
+    		
+	        if( columnMap[j] == 'geojson' ) {
+	        	var p = JSON.parse(data.getValue(i, j));
+	        	points.push(p);
+
+		        var demand = p.properties.allocations[0].demand;
+		        var allocation = p.properties.allocations[0].allocation;
+		        if( demand > 0 ) {
+		        	var ratio = allocation / demand;
+		        	p.properties.allocations[0].ratio = ratio;
+		        }
+		    }
 	    }
     };
+
 
     var l = L.geoJson(points,{
 		pointToLayer: function (feature, latlng) {
@@ -191,26 +204,39 @@ function onDataLoad(response) {
 				var demand = feature.properties.allocations[0].demand;
 				var allocation = feature.properties.allocations[0].allocation;
 
-				
 				if( demand == 0 ) {
 					options.fillColor = '#333';
 					options.radius = 6;
 					options.fillOpacity = .7;
 				} else {
-					var size = Math.sqrt(allocation) * 3;
-					//if( size > 25 ) size = 25;
+					var size = Math.sqrt(demand) * 3;
+					if( size > 50 ) size = 50;
 					if( size < 7 ) size = 7;
 					options.radius = size;
+					options.fillColor = '#'+getColor(allocation / demand);
 				}	
 			}
 
 
 
 			var marker;
+			var d;
+			try {
+				console.log(feature.properties.priority_date.replace(/-.*/,''));
+				d = feature.properties.priority_date ? parseInt(feature.properties.priority_date.replace(/-.*/,'')) : 2000;
+			} catch(e) {
+				d = 2000;
+			}
+			
+			
 			if( feature.properties.riparian ) {
+				marker = L.circleMarker(latlng, options);
+			} else if ( d < 1914 ) {
+				options.sides = 3;
+				options.rotate = 90;
 				marker = L.polyMarker(latlng, options);
 			} else {
-				marker = L.circleMarker(latlng, options);
+				marker = L.polyMarker(latlng, options);
 			}
 
 			allData.push({
@@ -225,6 +251,7 @@ function onDataLoad(response) {
 		$('.select-text').remove();
 		$('#info').show();
 		var props = e.layer.feature.properties;
+		console.log(props);
 
 		select(e.layer);
 
@@ -235,19 +262,26 @@ function onDataLoad(response) {
 			}
 		}*/
 
+		//console.log("Matching...");
+		//console.log(e.layer.feature.properties);
+		//console.log("-----");
+
 		var ll = e.layer.feature.geometry.coordinates;
-		console.log(e.layer.feature);
+		
 		var t, html = '';
 		for( var i = 0; i < allData.length; i++ ) {
 			t = allData[i].feature.geometry.coordinates;
 			if( ll[0].toFixed(4) == t[0].toFixed(4) && ll[1].toFixed(4) == t[1].toFixed(4) ) {
+				var p = allData[i].feature.properties;
+
 				html += stamp({
-					application_number : allData[i].feature.properties.application_number,
+					application_number : p.application_number,
 					date : '2014-03-01',
-					allocation : allData[i].feature.properties.allocations[0].allocation,
-					demand : allData[i].feature.properties.allocations[0].demand,
-					water_right_type : allData[i].feature.properties.water_right_type,
-					priority_date : allData[i].feature.properties.priority_date
+					allocation : p.allocations[0].allocation,
+					demand : p.allocations[0].demand,
+					ratio : p.allocations[0].ratio != null ? (p.allocations[0].ratio*100).toFixed(2) : '100',
+					water_right_type : p.water_right_type,
+					priority_date : p.priority_date ? p.priority_date : 'Unknown'
 				});
 			}
 		}
@@ -255,6 +289,23 @@ function onDataLoad(response) {
 		
 		$('#info-result').html(html);
 	});
+}
+
+function getColor(num) {
+		if( num > 1 ) num = 1;
+		if( num < 0 ) num = 0;
+        var spread = Math.floor(510*num) - 255;
+
+        if( spread < 0 ) return "ff00"+toHex(255+spread);
+        else if( spread > 0 ) return toHex(255-spread)+"00ff";
+        else return "ffff00";
+
+}
+
+function toHex(num) {
+        num = num.toString(16);
+        if( num.length == 1 ) num = "0"+num;
+        return num;
 }
 
 var selected = null;

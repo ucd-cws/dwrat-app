@@ -35,7 +35,7 @@ var markers = {
 	    	color       : "#333",
 	    	weight      : 1,
 	    	opacity     : 1,
-	    	fillOpacity : .8,
+	    	fillOpacity : .3,
 		},
 		unallocated : {
 			radius      : 9,
@@ -53,7 +53,7 @@ var markers = {
 	    	color       : "#333",
 	    	weight      : 1,
 	    	opacity     : 1,
-	    	fillOpacity : .8,
+	    	fillOpacity : .3,
 	    	sides       : 4,
 			rotate      : 45
 		},
@@ -99,7 +99,10 @@ function init() {
 		}, 800);
 		
 	});
+	
+}
 
+function initVizSource() {
 	getWatersheds();
 }
 
@@ -121,6 +124,7 @@ function getWatersheds() {
     	};
 
     	$('#exec').removeClass('disabled').html('Execute');
+    	initMapQuery();
   	});
 }
 
@@ -138,21 +142,36 @@ function resize() {
 	$('#info').css('max-height', (h-85)+'px');
 }
 
-function drawChart() {
-	$('#date').val('2014-03-01').on('change', function(){
-		alert('not implemented yet');
+function initMapQuery() {
+	var date = new Date().toLocaleString().replace(/\s.*/,'').split('/');
+	if( date[0].length == 1 ) date[0] = "0"+date[0];
+	if( date[1].length == 1 ) date[1] = "0"+date[1];
+	
+	$('#date').val(date[2]+'-'+date[0]+'-'+date[1]).on('change', function(){
+		query();
 	});
-
 	$('#search').on('keypress', function(e){
-		if( e.which == 13 ) alert('not implemented yet');
-	});
-	//var query = new google.visualization.Query('http://watershed.ice.ucdavis.edu/vizsource/rest?view=demand(\'2014-03-01\')&tq=SELECT * limit 10');
-  	var query = new google.visualization.Query('http://watershed.ice.ucdavis.edu/vizsource/rest?view=allocation(\'2014-03-01\')&tq=SELECT *');
+		if( e.which == 13 ) query();
+	});	
 
+	$('#watershed').on('change', function(e){
+		query();
+	});	
+
+	query();
+}
+
+function query() {
+	$('#loading').show();
+	//var query = new google.visualization.Query('http://watershed.ice.ucdavis.edu/vizsource/rest?view=demand(\'2014-03-01\')&tq=SELECT * limit 10');
+  	var query = new google.visualization.Query('http://watershed.ice.ucdavis.edu/vizsource/rest?view=allocation(\''+
+  		$('#date').val()+'\',\''+$('#watershed').val()+'\')&tq=SELECT *');
   	query.send(onDataLoad);
 }
 
+
 function onDataLoad(response) {
+	$('#loading').hide();
 	if (response.isError()) {
       console.log('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
       return;
@@ -187,6 +206,9 @@ function onDataLoad(response) {
 	    }
     };
 
+    points.sort(function(a, b){
+    	// TODO
+    });
 
     var l = L.geoJson(points,{
 		pointToLayer: function (feature, latlng) {
@@ -207,13 +229,18 @@ function onDataLoad(response) {
 				if( demand == 0 ) {
 					options.fillColor = '#333';
 					options.radius = 6;
-					options.fillOpacity = .7;
+					options.fillOpacity = .3;
 				} else {
 					var size = Math.sqrt(demand) * 3;
 					if( size > 50 ) size = 50;
 					if( size < 7 ) size = 7;
 					options.radius = size;
-					options.fillColor = '#'+getColor(allocation / demand);
+
+					var o = allocation / demand;
+					if( o > 1 ) o = 1;
+					options.fillOpacity = o;
+					options.fillColor = '#0000ff';
+					//options.fillColor = '#'+getColor(allocation / demand);
 				}	
 			}
 
@@ -222,7 +249,6 @@ function onDataLoad(response) {
 			var marker;
 			var d;
 			try {
-				console.log(feature.properties.priority_date.replace(/-.*/,''));
 				d = feature.properties.priority_date ? parseInt(feature.properties.priority_date.replace(/-.*/,'')) : 2000;
 			} catch(e) {
 				d = 2000;

@@ -2,6 +2,14 @@ body {
 	overflow: hidden;
 }
 
+.loading {
+	position:absolute;
+	color:#7699E4;
+	top:15px;
+	font-size:18px;
+	display:none;
+}
+
 .navbar.navbar-default {
 	margin: 0px !important;
 	border-radius: 0px !important;

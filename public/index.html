@@ -26,7 +26,7 @@
     
       // Load the Visualization API and the piechart package.
       google.load('visualization', '1.0', {'packages':['corechart', 'table']});
-      google.setOnLoadCallback(drawChart);
+      google.setOnLoadCallback(initVizSource);
   </script>
 
   <style>
@@ -50,22 +50,23 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" >Water Right Allocations for California</a>
+          <i id="loading" class="fa fa-spinner fa-spin"></i>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="query.html"><i class="fa fa-share"></i> Query Interface</a></li>
+            <li><a href="query.html"><i class="fa fa-share"></i> <span class="hidden-sm">Query Interface</span></a></li>
           </ul>
 
           <div class="navbar-form navbar-right" role="search">
 
             <div class="form-group">
-              <select id="watershed"></select>
+              <select id="watershed" style="width:150px"></select>
             </div>
             &nbsp;&nbsp;&nbsp;
             <div class="form-group"> 
               <i class="fa fa-calendar"></i>&nbsp;
-              <input id="date" type="date" class="form-control" placeholder="Date" />
+              <input id="date" type="date" class="form-control" placeholder="Date" style="width:170px"/>
             </div>
           </div>
 

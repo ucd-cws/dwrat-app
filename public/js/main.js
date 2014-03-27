@@ -311,7 +311,7 @@ function onDataLoad(response) {
 
 				html += stamp({
 					application_number : p.application_number,
-					date : '2014-03-01',
+					date : p.allocations[0].date,
 					allocation : p.allocations[0].allocation,
 					demand : p.allocations[0].demand,
 					ratio : p.allocations[0].ratio != null ? (p.allocations[0].ratio*100).toFixed(2) : '100',

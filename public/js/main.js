@@ -1,4 +1,4 @@
-var map;
+var map, geoJsonLayer;
 
 
 $(window).on('ready', function(){
@@ -171,9 +171,9 @@ function query() {
 
 
 function onDataLoad(response) {
-	$('#loading').hide();
 	if (response.isError()) {
       console.log('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+      $('#loading').hide();
       return;
     }
 
@@ -206,11 +206,17 @@ function onDataLoad(response) {
 	    }
     };
 
+
+
+    if( geoJsonLayer ) map.removeLayer(geoJsonLayer);
+    geoJsonLayer = null;
+    if( points.length == 0 ) return;
+
     points.sort(function(a, b){
     	// TODO
     });
 
-    var l = L.geoJson(points,{
+    geoJsonLayer = L.geoJson(points,{
 		pointToLayer: function (feature, latlng) {
 			var type = feature.properties.riparian ? 'riparian' : 'application';
 			var allocation = 'unallocated';
@@ -273,7 +279,7 @@ function onDataLoad(response) {
 	    }
 	}).addTo(map);
 
-	l.on('click', function(e) {
+	geoJsonLayer.on('click', function(e) {
 		$('.select-text').remove();
 		$('#info').show();
 		var props = e.layer.feature.properties;
@@ -315,6 +321,8 @@ function onDataLoad(response) {
 		
 		$('#info-result').html(html);
 	});
+
+	$('#loading').hide();
 }
 
 function getColor(num) {

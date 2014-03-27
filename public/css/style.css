@@ -2,7 +2,7 @@ body {
 	overflow: hidden;
 }
 
-.loading {
+#loading {
 	position:absolute;
 	color:#7699E4;
 	top:15px;

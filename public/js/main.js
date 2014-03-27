@@ -163,6 +163,9 @@ function initMapQuery() {
 
 function query() {
 	$('#loading').show();
+	if( geoJsonLayer ) map.removeLayer(geoJsonLayer);
+    geoJsonLayer = null;
+
 	//var query = new google.visualization.Query('http://watershed.ice.ucdavis.edu/vizsource/rest?view=demand(\'2014-03-01\')&tq=SELECT * limit 10');
   	var query = new google.visualization.Query('http://watershed.ice.ucdavis.edu/vizsource/rest?view=allocation(\''+
   		$('#date').val()+'\',\''+$('#watershed').val()+'\')&tq=SELECT *');
@@ -207,10 +210,10 @@ function onDataLoad(response) {
     };
 
 
-
-    if( geoJsonLayer ) map.removeLayer(geoJsonLayer);
-    geoJsonLayer = null;
-    if( points.length == 0 ) return;
+    if( points.length == 0 ) {
+    	$('#loading').hide();
+    	return;
+    }
 
     points.sort(function(a, b){
     	// TODO

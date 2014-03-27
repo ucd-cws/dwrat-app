@@ -197,14 +197,17 @@ function onDataLoad(response) {
     		
 	        if( columnMap[j] == 'geojson' ) {
 	        	var p = JSON.parse(data.getValue(i, j));
-	        	points.push(p);
+	        	
+	        	if( p.properties.allocations[0].season ) {
+	        		points.push(p);
 
-		        var demand = p.properties.allocations[0].demand;
-		        var allocation = p.properties.allocations[0].allocation;
-		        if( demand > 0 ) {
-		        	var ratio = allocation / demand;
-		        	p.properties.allocations[0].ratio = ratio;
-		        }
+			        var demand = p.properties.allocations[0].demand;
+			        var allocation = p.properties.allocations[0].allocation;
+			        if( demand > 0 ) {
+			        	var ratio = allocation / demand;
+			        	p.properties.allocations[0].ratio = ratio;
+			        }
+			    }
 		    }
 	    }
     };

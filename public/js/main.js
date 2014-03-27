@@ -165,6 +165,7 @@ function query() {
 	$('#loading').show();
 	if( geoJsonLayer ) map.removeLayer(geoJsonLayer);
     geoJsonLayer = null;
+    allData = [];
 
 	//var query = new google.visualization.Query('http://watershed.ice.ucdavis.edu/vizsource/rest?view=demand(\'2014-03-01\')&tq=SELECT * limit 10');
   	var query = new google.visualization.Query('http://watershed.ice.ucdavis.edu/vizsource/rest?view=allocation(\''+

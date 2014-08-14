@@ -118,8 +118,42 @@ function init() {
 		}, 800);
 		
 	});
-	
+
+	$('#file-modal').modal({show:false});	
+	$('#file-input').on('change', function(e) {
+		processFile(e);
+	});
+	$('#upload-btn').on('click', function(){
+		$('#file-modal').modal('show');
+	});
 }
+
+function processFile(e) {
+	e.stopPropagation();
+	e.preventDefault();
+	var files = e.dataTransfer ? e.dataTransfer.files : e.target.files; // FileList object.
+
+	if( files.length > 0 ) {
+		file.read(files[0], function(err, data){
+			file.matchCols(data, function(colMap){
+				// now locate data and create
+				file.createGeoJson(data, colMap, function(){
+
+					$('#date-selection').hide();
+					$('#file-selection').html(files[0].name+' <a class="btn btn-default" id="remove-file-btn"><i class="fa fa-times"></i></a>');
+					$('#remove-file-btn').on('click',function(){
+						if( geoJsonLayer ) map.removeLayer(geoJsonLayer);
+						$('#date-selection').show();
+						$('#file-selection').html('');
+					});
+
+					$('#file-modal').modal('hide');
+				});
+			});
+		});
+	}
+}
+
 
 function initVizSource() {
 	getWatersheds();
@@ -242,7 +276,13 @@ function onDataLoad(response) {
     	// TODO
     });
 
-    geoJsonLayer = L.geoJson(points,{
+    addGeoJson(points);
+
+	$('#loading').hide();
+}
+
+function addGeoJson(points) {
+	geoJsonLayer = L.geoJson(points,{
 		pointToLayer: function (feature, latlng) {
 			var type = feature.properties.riparian ? 'riparian' : 'application';
 			var allocation = 'unallocated';
@@ -347,9 +387,8 @@ function onDataLoad(response) {
 		
 		$('#info-result').html(html);
 	});
-
-	$('#loading').hide();
 }
+
 
 function getColor(num) {
 		if( num > 1 ) num = 1;

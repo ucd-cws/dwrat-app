@@ -17,9 +17,13 @@
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="bower_components/handlebars/handlebars.min.js"></script>
 	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="bower_components/js-xls/dist/xls.full.min.js"></script>
+  <script src="bower_components/js-xlsx/dist/xlsx.full.min.js"></script>
+  <script src="bower_components/jquery-csv/src/jquery.csv.js"></script>
 	<script src="js/leaflet.js"></script>
   <script src="js/PolyMarker.js"></script>
 	<script src="js/main.js"></script>
+  <script src="js/file.js"></script>
 
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
   <script type="text/javascript">
@@ -59,15 +63,21 @@
           </ul>
 
           <div class="navbar-form navbar-right" role="search">
+            <div style="display:inline-block;border-right:1px solid #ccc;padding-right:5px;margin-right:5px">
+              <a class="btn btn-default" id="upload-btn"><i class="fa fa-upload"></i> Upload</a>
+            </div>
 
-            <div class="form-group">
-              <select id="watershed" style="width:150px"></select>
+            <div style="display:inline-block" id="date-selection">
+              <div class="form-group">
+                <select id="watershed" style="width:150px"></select>
+              </div>
+              &nbsp;&nbsp;&nbsp;
+              <div class="form-group"> 
+                <i class="fa fa-calendar"></i>&nbsp;
+                <input id="date" type="date" class="form-control" placeholder="Date" style="width:170px"/>
+              </div>
             </div>
-            &nbsp;&nbsp;&nbsp;
-            <div class="form-group"> 
-              <i class="fa fa-calendar"></i>&nbsp;
-              <input id="date" type="date" class="form-control" placeholder="Date" style="width:170px"/>
-            </div>
+            <div style="display:inline-block" id="file-selection"></div>
           </div>
 
           
@@ -86,6 +96,26 @@
 a reasonable and beneficial use.</p>
       <p><em>Select a water right to see it's current allocation</em></p>
       <div id="info-result"></div>
-	</div>
+  	</div>
+  </div>
+
+  <div class="modal fade" id="file-modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" id="header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">Upload File</h4>
+          </div>
+          <div class="modal-body">
+            <div>Upload worksheet to visualize on map.</div>
+            File: <input type="file" style="margin:5px 0 0 33px" id="file-input" name="file-input" >
+
+            <div id="matchTable"></div>
+            <div id="file-locate"></div>
+          </div>
+
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 </body>
 </html>

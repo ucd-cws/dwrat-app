@@ -211,12 +211,12 @@ var file = (function(){
         }
     }
 
-    function createGeoJson(data, map, callback) {
+    function createGeoJson(data, attrMap, callback) {
         // first locate data
         $('#file-locate').html('Locating data...');
 
         var ids = [];
-        var col = getAttrCol('application_number', data, map);
+        var col = getAttrCol('application_number', data, attrMap);
         for( var i = 1; i < data.length; i++ ) {
             ids.push(data[i][col]);
         }
@@ -226,7 +226,7 @@ var file = (function(){
             $('#file-locate').html('Creating data...');
 
             var iMap = {};
-            for( var key in map ) iMap[map[key]] = key;
+            for( var key in attrMap ) iMap[attrMap[key]] = key;
 
             var geoJson = [];
             for( var i = 1; i < data.length; i++ ) {

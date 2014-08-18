@@ -39,11 +39,33 @@
       height: 1px;
       margin-top: 15px;
     }
+    #upload-drop-message {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: none;
+      text-align: center;
+    }
+    #upload-drop-message > .inner {
+      background-color: #333;
+      border-radius: 4px;
+      font-size: 28px;
+      padding: 10px;
+      margin: 30px auto;
+      color: white;
+      display: inline-block;
+    }
   </style>
 
 </head>
 <body>
 
+<div id="upload-drop-message">
+  <div class="inner">Drop file to upload.</div>
+</div>
+
+<div id="wrapper">
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -98,6 +120,7 @@ a reasonable and beneficial use.</p>
       <div id="info-result"></div>
   	</div>
   </div>
+</div>
 
   <div class="modal fade" id="file-modal">
       <div class="modal-dialog">

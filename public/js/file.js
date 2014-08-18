@@ -47,6 +47,9 @@ var file = (function(){
         }
     };
 
+    var previousAttrMap = {};
+    var locations = {};
+
     function read(raw, callback) {
         _resetUI();
 
@@ -76,19 +79,19 @@ var file = (function(){
 
         var matches = [];
         var requiredMismatches = [];
-        var mapped = {};
+        var mapped = previousAttrMap;
 
         for( var key in HEADERS ) {
-            if( data[0].indexOf(key) == -1 && HEADERS[key].required ) {
+            if( previousAttrMap[key] ) {
+                matches.push(key);
+            } else if( data[0].indexOf(key) == -1 && HEADERS[key].required ) {
                 requiredMismatches.push(key);
             } else if( data[0].indexOf(key) > -1 ) {
                 matches.push(key);
             }
         }
 
-        console.log(matches);
-
-        if( requiredMismatches.length == 0 ) return callback({});
+        if( requiredMismatches.length == 0 ) return callback(previousAttrMap);
 
         var table = '<table class="table">';
         for( var i = 0; i < requiredMismatches.length; i++ ) {
@@ -112,7 +115,8 @@ var file = (function(){
 
            
             if( requiredMismatches.length == 0 ) {
-                 $('#matchTable').html('');
+                $('#matchTable').html('');
+                previousAttrMap = mapped;
                 callback(mapped);
             }
         });
@@ -218,10 +222,11 @@ var file = (function(){
         var ids = [];
         var col = getAttrCol('application_number', data, attrMap);
         for( var i = 1; i < data.length; i++ ) {
-            ids.push(data[i][col]);
+            var id = data[i][col];
+            if( !locations[id] ) ids.push(data[i][col]);
         }
 
-        _locateData(0, ids, {}, function(locations){
+        _locateData(0, ids, function(){
 
             $('#file-locate').html('Creating data...');
 
@@ -265,9 +270,9 @@ var file = (function(){
         });
     }
 
-    function _locateData(index, ids, locations, callback) {
+    function _locateData(index, ids, callback) {
         if( index+1 >= ids.length ) {
-            callback(locations);
+            callback();
         } else {
             var idGroup = [];
 
@@ -294,7 +299,7 @@ var file = (function(){
                 }
 
                 $('#file-locate').html('Locating data '+((index/ids.length).toFixed(2)*100)+'%...');
-                _locateData(index, ids, locations, callback);
+                _locateData(index, ids, callback);
             });
         }
     }

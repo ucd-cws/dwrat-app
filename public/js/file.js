@@ -264,6 +264,7 @@ var file = (function(){
             }
 
             if( geoJsonLayer ) map.removeLayer(geoJsonLayer);
+            allData = [];
             addGeoJson(geoJson);
             $('#file-locate').html('');
             callback();

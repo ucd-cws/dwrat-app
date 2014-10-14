@@ -230,10 +230,11 @@ function initMapQuery() {
 		if( e.which == 13 ) query();
 	});	
 
-	$('#watershed').val(params.river || '').on('change', function(e){
+	var select = $('#watershed').on('change', function(e){
 		updateHash();
 		//query();
 	});	
+	if( params.river ) select.val(params.river);
 
 	query();
 }

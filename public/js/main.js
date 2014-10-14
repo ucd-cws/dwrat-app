@@ -71,10 +71,7 @@ var markers = {
 
 
 function init() {
-	map = L.map('map',{trackResize:true}).setView([38, -116], 6);
-
-	map.on('zoomend', updateHash);
-	map.on('moveend', updateHash);
+	map = L.map('map',{trackResize:true});
 
 	// add an OpenStreetMap tile layer
 	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -240,17 +237,27 @@ function initMapQuery() {
 	if( params.river ) select.val(params.river);
 
 
-	if( params.zoom ) {
+	if( params.zoom && !params.ll ) {
 		try {
 			map.setZoom(parseInt(params.zoom));
 		} catch(e) {}
 	}
-	if ( params.ll ) {
+	if ( params.ll  ) {
 		try {
 			var ll = params.ll.split(',');
-			map.setView(L.latLng(parseFloat(ll[0]), parseFloat(ll[1])));		
+			ll = [parseFloat(ll[0]), parseFloat(ll[1])];
+			map.setView(ll, parseInt(params.zoom));		
 		} catch(e) {}
 	}
+
+	if( !params.ll && !params.zoom ) {
+		map.setView([38, -116], 6);
+	}
+
+	setTimeout(function(){
+		map.on('zoomend', updateHash);
+		map.on('moveend', updateHash);
+	},1000);
 
 	query();
 }
@@ -293,7 +300,13 @@ function onHashUpdate() {
 	query();
 }
 
+var lastDate = '';
+var lastRiver = '';
 function query() {
+	if( $('#date').val() == lastDate && $('#watershed').val() == lastRiver ) return;
+	lastDate = $('#date').val();
+	lastRiver = $('#watershed').val();
+
 	$('#loading').show();
 	if( geoJsonLayer ) map.removeLayer(geoJsonLayer);
     geoJsonLayer = null;
@@ -347,6 +360,7 @@ function onDataLoad(response) {
 
 
     if( points.length == 0 ) {
+    	if( geoJsonLayer ) map.removeLayer(geoJsonLayer);
     	$('#loading').hide();
     	return;
     }

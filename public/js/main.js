@@ -278,6 +278,18 @@ function onHashUpdate() {
 	if( params.river ) {
 		$('#watershed').val(params.river);
 	}
+
+	if( params.zoom ) {
+		try {
+			map.setZoom(parseInt(params.zoom));
+		} catch(e) {}
+	}
+	if ( params.ll ) {
+		try {
+			var ll = params.ll.split(',');
+			map.setView(L.latLng(parseFloat(ll[0]), parseFloat(ll[1])));		
+		} catch(e) {}
+	}
 	query();
 }
 

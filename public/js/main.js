@@ -73,6 +73,9 @@ var markers = {
 function init() {
 	map = L.map('map',{trackResize:true}).setView([38, -116], 6);
 
+	map.on('zoomend', updateHash);
+	map.on('moveend', updateHash);
+
 	// add an OpenStreetMap tile layer
 	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 	    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -236,11 +239,26 @@ function initMapQuery() {
 	});	
 	if( params.river ) select.val(params.river);
 
+
+	if( params.zoom ) {
+		try {
+			map.setZoom(parseInt(params.zoom));
+		} catch(e) {}
+	}
+	if ( params.ll ) {
+		try {
+			var ll = params.ll.split(',');
+			map.setView(L.latLng(parseFloat(ll[0]), parseFloat(ll[1])));		
+		} catch(e) {}
+	}
+
 	query();
 }
 
 function updateHash() {
-	window.location.hash="date="+$('#date').val()+"&river="+$('#watershed').val();
+	var ll = map.getCenter();
+	window.location.hash="date="+$('#date').val()+"&river="+$('#watershed').val()+
+		'&zoom='+map.getZoom()+'&ll='+ll.lat+','+ll.lng;
 }
 
 function getHashParams() {

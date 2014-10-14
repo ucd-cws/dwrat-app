@@ -264,15 +264,15 @@ function initMapQuery() {
 
 function updateHash() {
 	var ll = map.getCenter();
-	window.location.hash="date="+$('#date').val()+"&river="+$('#watershed').val()+
-		'&zoom='+map.getZoom()+'&ll='+ll.lat+','+ll.lng;
+	window.location.hash="date="+$('#date').val()+"&river="+encodeURIComponent($('#watershed').val())+
+		'&zoom='+map.getZoom()+'&ll='+encodeURIComponent(ll.lat+','+ll.lng);
 }
 
 function getHashParams() {
 	var params = {}; parts = window.location.hash.replace(/#/g,'').split('&');
 	for( var i = 0; i < parts.length; i++ ) {
 		var p = parts[i].split('=');
-		params[p[0]] = p[1];
+		params[p[0]] = ecodeURIComponent(p[1]);
 	}
 	return params;
 }

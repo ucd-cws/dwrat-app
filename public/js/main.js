@@ -272,7 +272,7 @@ function getHashParams() {
 	var params = {}; parts = window.location.hash.replace(/#/g,'').split('&');
 	for( var i = 0; i < parts.length; i++ ) {
 		var p = parts[i].split('=');
-		params[p[0]] = encodeURIComponent(p[1]);
+		params[p[0]] = decodeURIComponent(p[1]);
 	}
 	return params;
 }

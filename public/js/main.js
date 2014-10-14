@@ -5,11 +5,9 @@ var wmsLayers = [];
 $(window).on('ready', function(){
 	resize();
 	init();
-});
-
-$(window).on('resize', function(e){
+}).on('resize', function(e){
 	resize();
-});
+}).on('hashchange', onHashUpdate);
 
 var allData = [];
 
@@ -221,21 +219,46 @@ function resize() {
 }
 
 function initMapQuery() {
-	var date = new Date().toLocaleString().replace(/\s.*/,'').split('/');
-	if( date[0].length == 1 ) date[0] = "0"+date[0];
-	if( date[1].length == 1 ) date[1] = "0"+date[1];
+	var date = new Date().toISOString().split('T')[0];
 	
-	$('#date').val(date[2]+'-'+date[0]+'-'+date[1]).on('change', function(){
-		query();
+	var params = getHashParams()
+	$('#date').val(params.date || date).on('change', function(){
+		updateHash();
+		//query();
 	});
 	$('#search').on('keypress', function(e){
 		if( e.which == 13 ) query();
 	});	
 
-	$('#watershed').on('change', function(e){
-		query();
+	$('#watershed').val(params.river || '').on('change', function(e){
+		updateHash();
+		//query();
 	});	
 
+	query();
+}
+
+function updateHash() {
+	window.location.hash="date="+$('#date').val()+"&river="+$('#watershed').val();
+}
+
+function getHashParams() {
+	var params = {}; parts = window.location.hash.replace(/#/g,'').split('&');
+	for( var i = 0; i < parts.length; i++ ) {
+		var p = parts[i].split('=');
+		params[p[0]] = p[1];
+	}
+	return params;
+}
+
+function onHashUpdate() {
+	params = getHashParams();
+	if( params.date ) {
+		$('#date').val(params.date);
+	}
+	if( params.river ) {
+		$('#watershed').val(params.river);
+	}
 	query();
 }
 

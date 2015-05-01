@@ -42,6 +42,7 @@ body {
 	position : absolute;
 	right: 15px;
 	top  : 65px;
+	z-index : 1000;
 
 	width : 38%;
 	max-width: 500px;

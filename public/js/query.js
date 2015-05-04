@@ -14,13 +14,18 @@ function init() {
 	$('#exec').on('click', function(){
 		run();
 	});
+
+	$('#exQueryBtn').on('click', function(){
+		$('#examples').toggle('slow');
+	});
+	$('.sample').on('click', runSample);
 }
 
 function ready() {
 	var query = new google.visualization.Query('http://watershed.ice.ucdavis.edu/vizsource/rest?view=watersheds&tq=SELECT * order by watershed');
   	query.send(function(response){
   		if (response.isError()) {
-	      $('#response').html('<div class="alert alert-danger">Error in query: ' + response.getMessage() + ' ' 
+	      $('#response').html('<div class="alert alert-danger">Error in query: ' + response.getMessage() + ' '
 	      		+ response.getDetailedMessage()+'</div>');
 	      return;
 	    }
@@ -35,13 +40,23 @@ function ready() {
   	});
 }
 
+function runSample(e) {
+	$('#table').val('demand');
+	$('#watershed').val('EEL RIVER');
+	$('#date').val('2014-05-01');
+	var query = $('#'+$(this).attr('query')).text();
+	$('#query').val(query);
+	run();
+	$('#examples').toggle('slow');
+}
+
 function run() {
 	$('#exec').addClass('disabled').html('<i class="fa fa-spinner fa-spin"></i> Executing Query...');
 
 	// [table]([date],[watershed]);
 
 	// demand date -> unlimited
-	// supply & allocation -> 
+	// supply & allocation ->
 
 	var table = $('#table').val();
 	var date = $('#date').val();
@@ -53,7 +68,7 @@ function run() {
   		$('#exec').removeClass('disabled').html('Execute');
 
   		if (response.isError()) {
-	      $('#response').html('<div class="alert alert-danger">Error in query: ' + response.getMessage() + ' ' 
+	      $('#response').html('<div class="alert alert-danger">Error in query: ' + response.getMessage() + ' '
 	      		+ response.getDetailedMessage()+'</div>');
 	      return;
 	    }

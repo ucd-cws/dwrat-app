@@ -98,6 +98,52 @@
     </div>
   </div>
 
+  <div class="row">
+		<div class="col-sm-10 col-sm-offset-1">
+			<h4><a style="cursor:pointer" id="exQueryBtn">Query Examples</a></h4>
+
+			<div id="examples" style="display:none">
+				<p>With the form is specified as:</p>
+
+				<table class="table">
+					<tr>
+						<th>form</th><th>value</th>
+					</tr><tr>
+						<td>Table</td><td>Demand</td>
+					</tr><tr>
+						<td>Watershed</td><td>EEL RIVER</td>
+					</tr><tr>
+						<td>Date</td><td>5-1-2014</td>
+					</tr>
+				</table>
+
+				<p>With the Query changing.</p>
+
+				<table class="table">
+					<tr>
+						<th>Desire</th><th>Query</th><th></th>
+					</tr><tr>
+						<td>One Application</td>
+						<td id="sample1">SELECT * WHERE application_number='A001719'</td>
+						<td><a class="btn btn-link sample" query="sample1">Run</a></td>
+					</tr><tr>
+						<td>Large Riparian Demands, Descending</td>
+						<td id="sample2">SELECT * WHERE riparian = true and demand &gt; 20 ORDER by demand desc</td>
+						<td><a class="btn btn-link sample" query="sample3">Run</a></td>
+					</tr><tr>
+						<td>Latest Appropriative rights</td>
+						<td id="sample3">SELECT * WHERE water_right_type='Appropriative' and priority_date &gt; '1990-01-01' order by priority_date desc</td>
+						<td><a class="btn btn-link sample" query="sample3">Run</a></td>
+					</tr><tr>
+						<td>For a specific HUC</td>
+						<td id="sample4">SELECT * WHERE huc_12 = '180101050802'</td>
+						<td><a class="btn btn-link sample" query="sample4">Run</a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
   <div id="response"></div>
 
 

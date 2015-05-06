@@ -14,7 +14,7 @@ $(window)
 var allData = [];
 
 // should be filled or empty;
-var renderDemand = 'filled';
+var renderDemand = 'empty';
 var currentPoints = null;
 
 var markerTemplate =

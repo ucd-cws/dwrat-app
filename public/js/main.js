@@ -5,11 +5,17 @@ var wmsLayers = [];
 $(document).on('ready', function(){
   resize();
   init();
-}).on('resize', function(e){
-  resize();
-}).on('hashchange', onHashUpdate);
+});
+
+$(window)
+  .on('hashchange', onHashUpdate)
+  .on('resize', resize);
 
 var allData = [];
+
+// should be filled or empty;
+var renderDemand = 'filled';
+var currentPoints = null;
 
 var markerTemplate =
   '<div class="spacer"></div>'+
@@ -151,13 +157,15 @@ function init() {
 
   });
 
+  $('#renderTypeFilled').on('click', onRenderTypeChange);
+  $('#renderTypeEmpty').on('click', onRenderTypeChange);
+
   initLegend();
 
 }
 
 function initLegend() {
 	var demandSteps = [0, 1, 50, 100, 250];
-	var percentSteps = [0, 25, 50, 75, 100];
 
 	var icon = new DroughtIcon(markers.riparian.unallocated);
 	$('#legend-riparian').append($(icon.ele));
@@ -199,32 +207,7 @@ function initLegend() {
 		$('#legend-demand-'+i).append($(icons[i].ele));
 	}
 
-
-	table = '<table style="text-align:center"><tr style="vertical-align: bottom">';
-  icons = [];
-	for( var i = 0; i < percentSteps.length; i++ ) {
-		table += '<td style="padding:8px"><div id="legend-precent-of-demand-'+i+'"></div><div>'+
-					percentSteps[i]+'%</div></td>';
-
-		var options = $.extend(true, {}, markers.application.unallocated);
-
-
-		if( percentSteps[i] == 0 ) {
-			options.fillColor = '#333';
-		} else {
-			var o = percentSteps[i] / 100;
-			if( o > 1 ) o = 1;
-			options.fillOpacity = o;
-			options.fillColor = '#0000ff';
-		}
-
-		icons.push(new DroughtIcon(options));
-	}
-	$('#legend-precent-of-demand').html(table+'</tr></table>');
-
-	for( var i = 0; i < icons.length; i++ ) {
-		$('#legend-precent-of-demand-'+i).append($(icons[i].ele));
-	}
+  redrawPDemandLegend();
 
 	// init toggle button
 
@@ -241,6 +224,29 @@ function initLegend() {
 		}
 	});
 }
+
+function redrawPDemandLegend() {
+  var percentSteps = [0, 25, 50, 75, 100];
+
+  var table = '<table style="text-align:center"><tr style="vertical-align: bottom">';
+  var icons = [];
+	for( var i = 0; i < percentSteps.length; i++ ) {
+		table += '<td style="padding:8px"><div id="legend-precent-of-demand-'+i+'"></div><div>'+
+					percentSteps[i]+'%</div></td>';
+
+		var options = $.extend(true, {}, markers.application.unallocated);
+
+    renderPercentDemand(options, percentSteps[i] / 100);
+
+		icons.push(new DroughtIcon(options));
+	}
+	$('#legend-precent-of-demand').html(table+'</tr></table>');
+
+	for( var i = 0; i < icons.length; i++ ) {
+		$('#legend-precent-of-demand-'+i).append($(icons[i].ele));
+	}
+}
+
 
 function processFile(e) {
   e.stopPropagation();
@@ -487,21 +493,19 @@ function addGeoJson(points) {
         var allocation = feature.properties.allocations[0].allocation;
 
         if( demand == 0 ) {
-          options.fillColor = '#333';
           options.radius = 6;
-          options.fillOpacity = .3;
+
+          renderPercentDemand(options, demand);
         } else {
+          renderPercentDemand(options, allocation / demand);
+
           var size = Math.sqrt(demand) * 3;
           if( size > 50 ) size = 50;
           if( size < 7 ) size = 7;
           options.radius = size;
-
-          var o = allocation / demand;
-          if( o > 1 ) o = 1;
-          options.fillOpacity = o;
-          options.fillColor = '#0000ff';
-          //options.fillColor = '#'+getColor(allocation / demand);
         }
+
+
       }
 
 
@@ -541,17 +545,6 @@ function addGeoJson(points) {
 
     select(e.layer);
 
-    /*for( var i = 0; i < allData.length; i++ ) {
-      if( allData[i].feature.properties.application_number == props.application_number ) {
-        select(allData[i].marker);
-        break;
-      }
-    }*/
-
-    //console.log("Matching...");
-    //console.log(e.layer.feature.properties);
-    //console.log("-----");
-
     var ll = e.layer.feature.geometry.coordinates;
 
     var t, html = '';
@@ -575,6 +568,8 @@ function addGeoJson(points) {
 
     $('#info-result').html(html);
   });
+
+  currentPoints = points;
 }
 
 
@@ -622,4 +617,55 @@ function stamp(data) {
   var template = markerTemplate;
   for( var key in data ) template = template.replace('{{'+key+'}}', data[key]);
   return template;
+}
+
+function onRenderTypeChange() {
+  var isFilledChecked = $('#renderTypeFilled').is(':checked');
+  var newVal = isFilledChecked ? 'filled' : 'empty';
+
+  if( renderDemand == newVal ) return;
+  renderDemand = newVal;
+
+  // render legend
+  redrawPDemandLegend();
+
+  if( !currentPoints ) return;
+
+  if( geoJsonLayer ) map.removeLayer(geoJsonLayer);
+  addGeoJson(currentPoints);
+}
+
+// percent should be 0 - 1;
+function renderPercentDemand(options, percent) {
+  if( renderDemand == 'filled' ) {
+
+    if( percent <= 0 ) {
+      options.fillColor = '#333';
+      options.fillOpacity = .3;
+    } else {
+      var o = percent;
+      if( o > 1 ) o = 1;
+      options.fillOpacity = o;
+      options.fillColor = '#0000ff';
+    }
+
+  } else {
+
+    if( percent >= 1 ) {
+      options.fillColor = '#333';
+      options.fillOpacity = .3;
+    } else {
+      var o = 1 - percent;
+      if( o > 1 ) o = 1;
+      if( o < 0 ) o = 0;
+
+      options.fillOpacity = o;
+      options.fillColor = '#ff0000';
+    }
+
+  }
+
+
+  //options.fillColor = '#'+getColor(allocation / demand);
+
 }

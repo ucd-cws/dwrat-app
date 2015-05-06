@@ -25,6 +25,7 @@
     "jquery": "~2.1.0",
     "js-xlsx": "~0.7.7",
     "js-xls": "~0.7.1",
-    "jquery-csv": "*"
+    "jquery-csv": "*",
+    "leaflet": "~0.7.3"
   }
 }

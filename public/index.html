@@ -8,7 +8,7 @@
 
 	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
-	<link rel="stylesheet" href="css/leaflet.css" />
+	<link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
 	<link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="bower_components/animate.css/animate.min.css" />
 
@@ -20,7 +20,7 @@
   <script src="bower_components/js-xls/dist/xls.full.min.js"></script>
   <script src="bower_components/js-xlsx/dist/xlsx.full.min.js"></script>
   <script src="bower_components/jquery-csv/src/jquery.csv.js"></script>
-	<script src="js/leaflet.js"></script>
+	<script src="bower_components/leaflet/dist/leaflet.js"></script>
   <script src="js/PolyMarker.js"></script>
 	<script src="js/main.js"></script>
   <script src="js/file.js"></script>
@@ -128,7 +128,23 @@ a reasonable and beneficial use.</p>
 					</tr><tr>
 						<td>Demand (Ac-ft/day)</td><td id="legend-demand"></td>
 					</tr><tr>
-						<td>Percent of Demand</td><td id="legend-precent-of-demand"></td>
+						<td>Percent of Demand</td>
+						<td>
+							<div id="legend-precent-of-demand"></div>
+
+							<div class="checkbox">
+				        <label>
+				          <input type="radio" name="renderType" id="renderTypeFilled" checked> Render as met demand
+				        </label>
+				      </div>
+
+							<div class="checkbox">
+				        <label>
+				          <input type="radio" name="renderType" id="renderTypeEmpty"> Render as shortage
+				        </label>
+				      </div>
+							
+						</td>
 					</tr>
 				</table>
 

@@ -631,7 +631,11 @@ function onRenderTypeChange() {
 
   if( !currentPoints ) return;
 
-  if( geoJsonLayer ) map.removeLayer(geoJsonLayer);
+  if( geoJsonLayer ) {
+    map.removeLayer(geoJsonLayer);
+    geoJsonLayer = null;
+    allData = [];
+  }
   addGeoJson(currentPoints);
 }
 

@@ -121,15 +121,26 @@ a reasonable and beneficial use.</p>
 			<h6><a class="btn btn-link" id="legendToggle" showing><i class="fa fa-arrow-down"></i></a> Legend</h6>
 			<div id="legend">
 				<table class="table">
+					<tr style="visibility:hidden"><td></td><td></td><td></td></tr>
 					<tr>
-						<td>Riparian</td><td id="legend-riparian"></td>
+						<td colspan="2">Riparian</td><td id="legend-riparian"></td>
 					</tr><tr>
-						<td>Application</td><td id="legend-application"></td>
+						<td colspan="2">Pre-1914 Appropriative</td><td id="legend-pre-appropriative"></td>
 					</tr><tr>
-						<td>Demand (Ac-ft/day)</td><td id="legend-demand"></td>
+						<td colspan="2" style="white-space:nowrap">Post-1914 Appropriative</td><td id="legend-post-appropriative"></td>
+					</tr><tr>
+						<td>Demand (Ac-ft/day)</td>
+						<td colspan="2">
+							<div id="legend-demand"></div>
+							<div class="checkbox">
+				        <label>
+				          <input type="checkbox" id="showNoDemand" checked> Show 0 demand nodes
+				        </label>
+				      </div>
+						</td>
 					</tr><tr>
 						<td>Percent of Demand</td>
-						<td>
+						<td colspan="2">
 							<div id="legend-precent-of-demand"></div>
 
 							<div class="checkbox">

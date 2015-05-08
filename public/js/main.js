@@ -16,6 +16,7 @@ var allData = [];
 // should be filled or empty;
 var renderDemand = 'empty';
 var currentPoints = null;
+var lastRespPoints = null;
 
 var markerTemplate =
   '<div class="spacer"></div>'+
@@ -76,6 +77,15 @@ var markers = {
       sides       : 4,
       rotate      : 45
     }
+  },
+  noDemand : {
+    noFill : true,
+    sides : 0,
+    strikethrough : true,
+    radius : 5,
+    noFill : true,
+    height : 12,
+    width : 12
   }
 }
 
@@ -159,6 +169,15 @@ function init() {
 
   $('#renderTypeFilled').on('click', onRenderTypeChange);
   $('#renderTypeEmpty').on('click', onRenderTypeChange);
+  $('#showNoDemand').on('click', function(){
+    if( geoJsonLayer ) {
+      map.removeLayer(geoJsonLayer);
+      geoJsonLayer = null;
+      allData = [];
+    }
+
+    addGeoJson(lastRespPoints);
+  });
 
   initLegend();
 
@@ -167,11 +186,20 @@ function init() {
 function initLegend() {
 	var demandSteps = [0, 1, 50, 100, 250];
 
-	var icon = new DroughtIcon(markers.riparian.unallocated);
+  var options = $.extend(true, {}, markers.riparian.unallocated);
+  options.sides = 0;
+	var icon = new DroughtIcon(options);
 	$('#legend-riparian').append($(icon.ele));
 
-	var icon = new DroughtIcon(markers.application.unallocated);
-	$('#legend-application').append($(icon.ele));
+
+  var options = $.extend(true, {}, markers.application.unallocated);
+  options.sides = 3;
+  options.rotate = 90;
+	icon = new DroughtIcon(options);
+	$('#legend-pre-appropriative').append($(icon.ele));
+
+  icon = new DroughtIcon(markers.application.unallocated);
+	$('#legend-post-appropriative').append($(icon.ele));
 
 	var table = '<table style="text-align:center"><tr style="vertical-align: bottom">';
   var icons = [];
@@ -181,15 +209,14 @@ function initLegend() {
 							(demandSteps[i] == 250 ? '>' : '') +
 							demandSteps[i]+'</div></td>';
 
-		var options = $.extend(true, {}, markers.application.unallocated);
+		var options;
 
 
 		if( demandSteps[i] == 0 ) {
-			options.fillColor = '#333';
-			options.radius = 7;
-			options.height = 16;
-			options.width = 16;
+      options = $.extend(true, {}, markers.noDemand);
 		} else {
+      options = $.extend(true, {}, markers.application.unallocated);
+
 			var size = Math.sqrt(demandSteps[i]) * 3;
 			if( size > 50 ) size = 50;
 			if( size < 7 ) size = 7;
@@ -470,11 +497,26 @@ function onDataLoad(response) {
     });
 
     addGeoJson(points);
+    lastRespPoints = points;
 
   $('#loading').hide();
 }
 
 function addGeoJson(points) {
+  var showNoDemand = $('#showNoDemand').is(':checked');
+
+  if( !showNoDemand ) {
+    tmp = [];
+    for( var i = points.length-1; i >= 0; i-- ) {
+      if( points[i].properties.allocations && points[i].properties.allocations.length > 0 ) {
+
+        var demand = points[i].properties.allocations[0].demand;
+        if( demand != 0 ) tmp.push(points[i]);
+      }
+    }
+    points = tmp;
+  }
+
   geoJsonLayer = L.geoJson(points,{
     pointToLayer: function (feature, latlng) {
       var type = feature.properties.riparian ? 'riparian' : 'application';
@@ -495,7 +537,9 @@ function addGeoJson(points) {
         if( demand == 0 ) {
           options.radius = 6;
 
-          renderPercentDemand(options, demand);
+          //renderPercentDemand(options, demand, true);
+          $.extend(true, markers.noDemand, options);
+          feature.properties.noDemand = true;
         } else {
           renderPercentDemand(options, allocation / demand);
 
@@ -518,8 +562,10 @@ function addGeoJson(points) {
         d = 2000;
       }
 
+      if( feature.properties.noDemand ) {
+        marker = L.noDemandIcon(latlng, options);
 
-      if( feature.properties.riparian ) {
+      } else if( feature.properties.riparian ) {
         marker = L.circleMarker(latlng, options);
       } else if ( d < 1914 ) {
         options.sides = 3;
@@ -534,7 +580,7 @@ function addGeoJson(points) {
         marker  : marker
       });
       return marker;
-      }
+    }
   }).addTo(map);
 
   geoJsonLayer.on('click', function(e) {
@@ -567,6 +613,9 @@ function addGeoJson(points) {
 
 
     $('#info-result').html(html);
+    $('#info').animate({
+      scrollTop: $('.info-box').height()
+    }, 300);
   });
 
   currentPoints = points;
@@ -598,7 +647,7 @@ function select(marker) {
       color : '#333',
       weight : 1
     });
-    selected.redraw();
+    if( selected.redraw ) selected.redraw();
   }
 
   if( marker ) {
@@ -606,7 +655,7 @@ function select(marker) {
       color : '#ff0000',
       weight : 2
     })
-    marker.redraw();
+    if( marker.redraw ) marker.redraw();
   }
 
   selected = marker;
@@ -640,7 +689,13 @@ function onRenderTypeChange() {
 }
 
 // percent should be 0 - 1;
-function renderPercentDemand(options, percent) {
+function renderPercentDemand(options, percent, noDemand) {
+  if( noDemand ) {
+     $.extend(true, options, markers.noDemand);
+     return;
+  }
+
+
   if( renderDemand == 'filled' ) {
 
     if( percent <= 0 ) {

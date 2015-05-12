@@ -21,13 +21,16 @@
   <script src="bower_components/js-xlsx/dist/xlsx.full.min.js"></script>
   <script src="bower_components/jquery-csv/src/jquery.csv.js"></script>
 	<script src="bower_components/leaflet/dist/leaflet.js"></script>
-  <script src="js/PolyMarker.js"></script>
+
 	<script src="js/main.js"></script>
   <script src="js/file.js"></script>
 
+	<script src="js/markers/leafletMarker.js"></script>
+	<script src="js/markers/iconRenderer.js"></script>
+	<script src="js/markers/config.js"></script>
+
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
   <script type="text/javascript">
-
       // Load the Visualization API and the piechart package.
       google.load('visualization', '1.0', {'packages':['corechart', 'table']});
       google.setOnLoadCallback(initVizSource);
@@ -75,7 +78,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" >Water Right Allocations for California</a>
+          <a class="navbar-brand" >
+						Water Right Allocations
+						<span class="visible-lg-inline">for California</span>
+						<span class="hidden-lg">: CA</span>
+					</a>
           <i id="loading" class="fa fa-spinner fa-spin"></i>
         </div>
 
@@ -86,18 +93,23 @@
 
           <div class="navbar-form navbar-right" role="search">
             <div style="display:inline-block;border-right:1px solid #ccc;padding-right:5px;margin-right:5px">
-              <a class="btn btn-default" id="upload-btn"><i class="fa fa-upload"></i> Upload</a>
+              <a class="btn btn-default" id="upload-btn"><i class="fa fa-upload"></i> <span class="hidden-xs hidden-sm">Upload</span></a>
             </div>
 
             <div style="display:inline-block" id="date-selection">
-              <div class="form-group">
+
+              <div class="form-group" style="display:inline-block">
                 <select id="watershed" style="width:150px"></select>
               </div>
               &nbsp;&nbsp;&nbsp;
-              <div class="form-group">
-                <i class="fa fa-calendar"></i>&nbsp;
-                <input id="date" type="date" class="form-control" placeholder="Date" style="width:170px"/>
-              </div>
+              <div class="form-group" style="display:inline-block; vertical-align:middle">
+								<table>
+									<tr>
+										<td><i class="fa fa-calendar"></i>&nbsp;</td>
+                		<td><input id="date" type="date" class="form-control" placeholder="Date" style="width:170px"/></td>
+              		</tr>
+								</table>
+							</div>
             </div>
             <div style="display:inline-block" id="file-selection"></div>
           </div>

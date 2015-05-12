@@ -33,63 +33,6 @@ var markerTemplate =
   '</div>'
 
 
-var markers = {
-  riparian : {
-    allocated : {
-      radius      : 9,
-      fillColor   : "#2525C9",
-      color       : "#333333",
-      weight      : 1,
-      opacity     : 1,
-      fillOpacity : .3,
-			sides : 3,
-			rotate : 90
-    },
-    unallocated : {
-      radius      : 9,
-      fillColor   : "#ffffff",
-      color       : "#333333",
-      weight      : 1,
-      opacity     : 1,
-      fillOpacity : .3,
-			sides : 3,
-			rotate : 90
-    }
-  },
-  application : {
-    allocated : {
-      radius      : 9,
-      fillColor   : "#2525C9",
-      color       : "#333333",
-      weight      : 1,
-      opacity     : 1,
-      fillOpacity : .3,
-      sides       : 4,
-      rotate      : 45
-    },
-    unallocated : {
-      radius      : 9,
-      fillColor   : "#ffffff",
-      color       : "#333333",
-      weight      : 1,
-      opacity     : 1,
-      fillOpacity : .3,
-      sides       : 4,
-      rotate      : 45
-    }
-  },
-  noDemand : {
-    noFill : true,
-    sides : 0,
-    strikethrough : true,
-    radius : 5,
-    noFill : true,
-    height : 12,
-    width : 12
-  }
-}
-
-
 function init() {
   map = L.map('map',{trackResize:true});
 
@@ -213,14 +156,14 @@ function initLegend() {
 
 
 		if( demandSteps[i] == 0 ) {
-      options = $.extend(true, {}, markers.noDemand);
+      options = $.extend(true, {}, markers.application.unallocated);
+      options = $.extend(true, options, markers.noDemand);
 		} else {
       options = $.extend(true, {}, markers.application.unallocated);
 
 			var size = Math.sqrt(demandSteps[i]) * 3;
 			if( size > 50 ) size = 50;
 			if( size < 7 ) size = 7;
-			options.radius = size;
 
 			options.height = (size*2)+2;
 			options.width = (size*2)+2;
@@ -535,21 +478,20 @@ function addGeoJson(points) {
         var allocation = feature.properties.allocations[0].allocation;
 
         if( demand == 0 ) {
-          options.radius = 6;
 
-          //renderPercentDemand(options, demand, true);
-          $.extend(true, markers.noDemand, options);
+          $.extend(true, options, markers.noDemand);
           feature.properties.noDemand = true;
+
         } else {
           renderPercentDemand(options, allocation / demand);
 
           var size = Math.sqrt(demand) * 3;
           if( size > 50 ) size = 50;
           if( size < 7 ) size = 7;
-          options.radius = size;
+
+          options.height = size*2;
+          options.width = size*2;
         }
-
-
       }
 
 
@@ -562,17 +504,15 @@ function addGeoJson(points) {
         d = 2000;
       }
 
-      if( feature.properties.noDemand ) {
-        marker = L.noDemandIcon(latlng, options);
-
-      } else if( feature.properties.riparian ) {
-        marker = L.circleMarker(latlng, options);
+      if( feature.properties.riparian ) {
+        options.sides = 0;
+        marker = L.leafletMarker(latlng, options);
       } else if ( d < 1914 ) {
         options.sides = 3;
         options.rotate = 90;
-        marker = L.polyMarker(latlng, options);
+        marker = L.leafletMarker(latlng, options);
       } else {
-        marker = L.polyMarker(latlng, options);
+        marker = L.leafletMarker(latlng, options);
       }
 
       allData.push({
@@ -587,7 +527,6 @@ function addGeoJson(points) {
     $('.select-text').remove();
     $('#info').show();
     var props = e.layer.feature.properties;
-    console.log(props);
 
     select(e.layer);
 
@@ -686,45 +625,4 @@ function onRenderTypeChange() {
     allData = [];
   }
   addGeoJson(currentPoints);
-}
-
-// percent should be 0 - 1;
-function renderPercentDemand(options, percent, noDemand) {
-  if( noDemand ) {
-     $.extend(true, options, markers.noDemand);
-     return;
-  }
-
-
-  if( renderDemand == 'filled' ) {
-
-    if( percent <= 0 ) {
-      options.fillColor = '#333';
-      options.fillOpacity = .3;
-    } else {
-      var o = percent;
-      if( o > 1 ) o = 1;
-      options.fillOpacity = o;
-      options.fillColor = '#0000ff';
-    }
-
-  } else {
-
-    if( percent >= 1 ) {
-      options.fillColor = '#333';
-      options.fillOpacity = .3;
-    } else {
-      var o = 1 - percent;
-      if( o > 1 ) o = 1;
-      if( o < 0 ) o = 0;
-
-      options.fillOpacity = o;
-      options.fillColor = '#ff0000';
-    }
-
-  }
-
-
-  //options.fillColor = '#'+getColor(allocation / demand);
-
 }

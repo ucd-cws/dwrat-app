@@ -70,6 +70,8 @@ function init() {
   };
   L.control.layers(baseMaps, overlayMaps, {position: 'bottomleft'}).addTo(map);
 
+  // initialize huc.js module
+  HUC.init(map);
 
   $('#close-popup').on('click', function(){
     $('#info').removeClass('fadeInDown').addClass('slideOutRight');
@@ -558,6 +560,8 @@ function addGeoJson(points) {
   });
 
   currentPoints = points;
+
+  HUC.render(points);
 }
 
 

@@ -96,8 +96,69 @@ function renderPercentDemand(options, percent, noDemand) {
     }
 
   }
-
-
   //options.fillColor = '#'+getColor(allocation / demand);
+}
 
+function renderPercentDemandHuc(percent) {
+  if( percent == -1 ) {
+     return {
+       fillColor : '#ffffff',
+       fillOpacity : .2,
+       weight : 1,
+       color: '#333333'
+     }
+  }
+
+
+  if( renderDemand == 'filled' ) {
+
+    if( percent <= 0 ) {
+
+      return {
+        fillColor : '#333333',
+        fillOpacity : .3,
+        weight : 2,
+        color: '#333333'
+      }
+
+
+    } else {
+      var o = percent;
+      if( o > .8 ) o = .8;
+
+      return {
+        fillColor : '#0000ff',
+        fillOpacity : o,
+        weight : 2,
+        color: '#333333'
+      }
+    }
+
+  } else {
+
+    if( percent >= 1 ) {
+
+      return {
+        fillColor : '#333333',
+        fillOpacity : .3,
+        weight : 2,
+        color: '#333333'
+      }
+
+    } else {
+      var o = 1 - percent;
+      if( o > .8 ) o = .8;
+      if( o < 0 ) o = 0;
+
+      return {
+        fillColor : '#ff0000',
+        fillOpacity : o,
+        weight : 2,
+        color: '#333333'
+      }
+
+    }
+
+  }
+  //options.fillColor = '#'+getColor(allocation / demand);
 }

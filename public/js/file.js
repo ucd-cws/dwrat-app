@@ -17,7 +17,7 @@ var file = (function(){
             required : false,
             type : 'boolean',
         },
-        huc_12 : {
+        'HUC-12' : {
             required : false,
             type : 'boolean'
         },
@@ -113,7 +113,7 @@ var file = (function(){
                 if (index > -1) requiredMismatches.splice(index, 1);
             }
 
-           
+
             if( requiredMismatches.length == 0 ) {
                 $('#matchTable').html('');
                 previousAttrMap = mapped;
@@ -265,6 +265,7 @@ var file = (function(){
 
             if( geoJsonLayer ) map.removeLayer(geoJsonLayer);
             allData = [];
+            lastRespPoints = geoJson;
             addGeoJson(geoJson);
             $('#file-locate').html('');
             callback();

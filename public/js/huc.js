@@ -47,8 +47,9 @@ var HUC = (function(){
 
     // organize points by huc
     var huc;
-    for( var i = 0; i < points.length; i++ ) {
-      huc = points[i].properties.huc_12;
+    for( var i = 0; i < currentPoints.length; i++ ) {
+      // TODO: did quinn change this?
+      huc = points[i].properties['HUC-12'] || points[i].properties.huc_12;
 
       if( pointsByHuc[huc] ) pointsByHuc[huc].push(points[i]);
       else pointsByHuc[huc] = [points[i]];
@@ -56,6 +57,8 @@ var HUC = (function(){
 
     // request missing huc geojson and/or render huc
     for( var huc in pointsByHuc ) {
+      if( huc === undefined || huc === 'undefined' ) debugger;
+
       if( hucCache[huc] ) renderHuc(huc);
       else if( !requested[huc] ) request(huc);
     }
@@ -71,7 +74,10 @@ var HUC = (function(){
 
       var data = response.getDataTable();
 
-      if( data.getNumberOfRows() == 0 ) return alert('Error: invalid HUC 12 id "'+hucId+"'");
+      if( data.getNumberOfRows() == 0 ) {
+        debugger;
+        return alert('Error: invalid HUC 12 id "'+hucId+"'");
+      }
 
       var geometry = JSON.parse(data.getValue(0, 0));
       var geojsonFeature = {

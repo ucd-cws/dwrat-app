@@ -546,7 +546,7 @@ function addGeoJson(points) {
           allocation : p.allocations[0].allocation,
           demand : p.allocations[0].demand,
           ratio : p.allocations[0].ratio != null ? (p.allocations[0].ratio*100).toFixed(2) : '100',
-          water_right_type : p.water_right_type,
+          water_right_type : p['Right Type'],
           priority_date : p.priority_date ? p.priority_date : 'Unknown'
         });
       }

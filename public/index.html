@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="bower_components/animate.css/animate.min.css" />
 
-
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="bower_components/handlebars/handlebars.min.js"></script>
@@ -26,16 +26,20 @@
   <script src="js/file.js"></script>
 	<script src="js/huc.js"></script>
 
+	<script src="js/directory/index.js"></script>
+
 	<script src="js/markers/leafletMarker.js"></script>
 	<script src="js/markers/iconRenderer.js"></script>
 	<script src="js/markers/config.js"></script>
 
-  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-  <script type="text/javascript">
-      // Load the Visualization API and the piechart package.
-      google.load('visualization', '1.0', {'packages':['corechart', 'table']});
-      google.setOnLoadCallback(initVizSource);
-  </script>
+	<script type="text/javascript">
+			// Load the Visualization API and the piechart package.
+			google.load('visualization', '1.0', {'packages':['corechart', 'table']});
+			google.setOnLoadCallback(function(){
+				initVizSource();
+				PublicData.init();
+			});
+	</script>
 
   <style>
     .spacer {

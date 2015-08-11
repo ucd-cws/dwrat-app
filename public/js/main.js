@@ -30,7 +30,7 @@ var markerTemplate =
     '{{water_right_type}}<br />'+
     '<b>Priority Date:</b> {{priority_date}}'+
     '</div>'+
-  '</div>'
+  '</div>';
 
 
 function init() {
@@ -249,11 +249,12 @@ function processFile(e) {
   }
 }
 
-
+/*
 function initVizSource() {
   getWatersheds();
-}
+}*/
 
+/*
 function getWatersheds() {
   var query = new google.visualization.Query('http://watershed.ice.ucdavis.edu/vizsource/rest?view=watersheds&tq=SELECT * order by watershed');
     query.send(function(response){
@@ -274,7 +275,7 @@ function getWatersheds() {
       $('#exec').removeClass('disabled').html('Execute');
       initMapQuery();
     });
-}
+}*/
 
 function resize() {
   // why is this not working???
@@ -289,7 +290,7 @@ function resize() {
   $('#map').height(h).width(w);
   $('#info').css('max-height', (h-85)+'px');
 }
-
+/*
 function initMapQuery() {
   var date = new Date().toISOString().split('T')[0];
 
@@ -332,7 +333,7 @@ function initMapQuery() {
   },1000);
 
   query();
-}
+}*/
 
 function updateHash() {
   var ll = map.getCenter();
@@ -374,6 +375,7 @@ function onHashUpdate() {
 
 var lastDate = '';
 var lastRiver = '';
+/*
 function query() {
   if( $('#date').val() == lastDate && $('#watershed').val() == lastRiver ) return;
   lastDate = $('#date').val();
@@ -388,9 +390,9 @@ function query() {
     var query = new google.visualization.Query('http://watershed.ice.ucdavis.edu/vizsource/rest?view=allocation(\''+
       $('#date').val()+'\',\''+$('#watershed').val()+'\')&tq=SELECT *');
     query.send(onDataLoad);
-}
+}*/
 
-
+/*
 function onDataLoad(response) {
   if (response.isError()) {
       console.log('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
@@ -445,7 +447,7 @@ function onDataLoad(response) {
     lastRespPoints = points;
 
   $('#loading').hide();
-}
+}*/
 
 function addGeoJson(points) {
   var showNoDemand = $('#showNoDemand').is(':checked');

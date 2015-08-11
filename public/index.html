@@ -22,7 +22,9 @@
   <script src="bower_components/jquery-csv/src/jquery.csv.js"></script>
 	<script src="bower_components/leaflet/dist/leaflet.js"></script>
 
-	<script src="js/main.js"></script>
+	<script src="js/app.js"></script>
+
+	<!--<script src="js/main.js"></script>
   <script src="js/file.js"></script>
 	<script src="js/huc.js"></script>
 
@@ -30,13 +32,14 @@
 
 	<script src="js/markers/leafletMarker.js"></script>
 	<script src="js/markers/iconRenderer.js"></script>
-	<script src="js/markers/config.js"></script>
+	<script src="js/markers/config.js"></script>-->
 
 	<script type="text/javascript">
 			// Load the Visualization API and the piechart package.
 			google.load('visualization', '1.0', {'packages':['corechart', 'table']});
 			google.setOnLoadCallback(function(){
-				initVizSource();
+				//initVizSource();
+				DWRAT.map.getLeaflet().setView([38, -116], 6);
 				PublicData.init();
 			});
 	</script>
@@ -92,30 +95,17 @@
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="query.html"><i class="fa fa-share"></i> <span class="hidden-sm">Query Interface</span></a></li>
-          </ul>
+
 
           <div class="navbar-form navbar-right" role="search">
-            <div style="display:inline-block;border-right:1px solid #ccc;padding-right:5px;margin-right:5px">
+						<div style="display:inline-block;padding-right:5px;margin-right:5px">
+							<a class="btn btn-default"><i class="fa fa-cloud"></i> <span class="hidden-xs hidden-sm">Public Directory</span></a>
+						</div>
+
+            <div style="display:inline-block;padding-right:5px;margin-right:5px">
               <a class="btn btn-default" id="upload-btn"><i class="fa fa-upload"></i> <span class="hidden-xs hidden-sm">Upload</span></a>
             </div>
 
-            <div style="display:inline-block" id="date-selection">
-
-              <div class="form-group" style="display:inline-block">
-                <select id="watershed" style="width:150px"></select>
-              </div>
-              &nbsp;&nbsp;&nbsp;
-              <div class="form-group" style="display:inline-block; vertical-align:middle">
-								<table>
-									<tr>
-										<td><i class="fa fa-calendar"></i>&nbsp;</td>
-                		<td><input id="date" type="date" class="form-control" placeholder="Date" style="width:170px"/></td>
-              		</tr>
-								</table>
-							</div>
-            </div>
             <div style="display:inline-block" id="file-selection"></div>
           </div>
 
@@ -206,5 +196,6 @@ a reasonable and beneficial use.</p>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
 </body>
 </html>

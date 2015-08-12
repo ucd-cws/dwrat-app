@@ -8,7 +8,7 @@
     "start": "cd public && ../node_modules/http-server/bin/http-server",
     "start-dist": "cd dist && ../node_modules/http-server/bin/http-server",
     "dev": "grunt browserify:watch",
-    "init": "npm install && bower install",
+    "init-dev": "npm install && bower install",
     "build": "grunt build"
   },
   "repository": {

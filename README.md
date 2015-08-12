@@ -6,7 +6,7 @@ To develop the standalone dwrat-app, run the following commands.  [NodeJS, NPM](
 
 One time, init dev environment.  Run on first install or after git pull.
 ```
-npm init
+npm run init-dev
 ```
 
 To develop, run:

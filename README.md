@@ -17,3 +17,15 @@ npm start
 // watch filesystem and browserify changes to ./lib
 npm dev
 ```
+
+#### Build
+Create new dist dir
+
+```
+npm build
+```
+
+Test out the build
+```
+npm run start-dist
+```

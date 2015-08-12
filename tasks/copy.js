@@ -28,7 +28,15 @@ module.exports = function copyto(grunt) {
                 cwd: 'public/bower_components/font-awesome/',
                 dest: 'dist',
                 src: ['fonts/*.*']
-            }]
+            },
+            {
+                expand: true,
+                dot: true,
+                cwd: 'public/bower_components/leaflet/dist',
+                dest: 'dist/style',
+                src: ['images/*.*']
+            }
+          ]
         }
     };
 };

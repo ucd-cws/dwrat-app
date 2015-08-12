@@ -37,8 +37,8 @@ module.exports = function (grunt) {
     // Register group tasks
     grunt.registerTask('build', [
       'clean',
-      'browserify',
-      'copyto',
+      'browserify:build',
+      'copy',
         // usemin start
         'useminPrepare',
         'concat:generated',
@@ -46,6 +46,6 @@ module.exports = function (grunt) {
         'uglify:generated',
         'usemin',
         // usemin end
-      'vulcanize']);
+      ]);
 
 };

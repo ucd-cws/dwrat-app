@@ -5,8 +5,10 @@
   "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./node_modules/http-server/bin/http-server",
-    "dev": "grunt browserify:watch"
+    "start": "cd public && ../node_modules/http-server/bin/http-server",
+    "start-dist": "cd dist && ../node_modules/http-server/bin/http-server",
+    "dev": "grunt browserify:watch",
+    "init": "npm install && bower install"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,7 @@
     "grunt-config-dir": "^0.3.2",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-cssmin": "^0.13.0",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-copy-to": "0.0.12",

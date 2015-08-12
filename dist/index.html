@@ -78,11 +78,11 @@
 
           <div class="navbar-form navbar-right" role="search">
 						<div style="display:inline-block;padding-right:5px;margin-right:5px">
-							<a class="btn btn-default"><i class="fa fa-cloud"></i> <span class="hidden-xs hidden-sm">Public Directory</span></a>
+							<a class="btn btn-link" id="directory-btn"><i class="fa fa-folder"></i> <span>Public Directory</span></a>
 						</div>
 
             <div style="display:inline-block;padding-right:5px;margin-right:5px">
-              <a class="btn btn-default" id="upload-btn"><i class="fa fa-upload"></i> <span class="hidden-xs hidden-sm">Upload</span></a>
+              <a class="btn btn-link" id="upload-btn"><i class="fa fa-upload"></i> <span>Upload</span></a>
             </div>
 
             <div style="display:inline-block" id="file-selection"></div>
@@ -162,19 +162,42 @@ a reasonable and beneficial use.</p>
         <div class="modal-content">
           <div class="modal-header" id="header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title">Upload File</h4>
+            <h4 class="modal-title"><i class="fa fa-upload"></i> Upload File</h4>
           </div>
           <div class="modal-body">
             <div>Upload worksheet to visualize on map.</div>
             File: <input type="file" style="margin:5px 0 0 33px" id="file-input" name="file-input" >
 
-            <div id="matchTable"></div>
             <div id="file-locate"></div>
           </div>
 
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+		<div class="modal fade" id="directory-modal">
+	      <div class="modal-dialog">
+	        <div class="modal-content">
+	          <div class="modal-header" id="header">
+	            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	            <h4 class="modal-title"><i class="fa fa-folder"></i> Public Directory</h4>
+	          </div>
+	          <div class="modal-body" id="directory-modal-body" ></div>
+	        </div><!-- /.modal-content -->
+	      </div><!-- /.modal-dialog -->
+	    </div><!-- /.modal -->
+
+<div class="modal fade" id="match-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" id="header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Match Column Names</h4>
+      </div>
+      <div class="modal-body" id="matchTable"></div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 </body>
 </html>

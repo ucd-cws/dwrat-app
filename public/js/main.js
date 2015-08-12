@@ -115,6 +115,7 @@ function init() {
   $('#renderTypeFilled').on('click', onRenderTypeChange);
   $('#renderTypeEmpty').on('click', onRenderTypeChange);
   $('#showNoDemand').on('click', function(){
+
     if( geoJsonLayer ) {
       map.removeLayer(geoJsonLayer);
       geoJsonLayer = null;

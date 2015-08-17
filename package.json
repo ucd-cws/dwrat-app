@@ -17,7 +17,9 @@
   },
   "author": "Justin Merz (jrmerz@ucdavis.edu)",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "leaflet-canvas-geojson": "ucd-cws/leaflet-canvas-geojson"
+  },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-browserify": "^4.0.0",

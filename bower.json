@@ -26,6 +26,7 @@
     "js-xlsx": "~0.7.7",
     "js-xls": "~0.7.1",
     "jquery-csv": "*",
-    "leaflet": "~0.7.3"
+    "leaflet": "~0.7.3",
+    "esri-leaflet": "~1.0.0"
   }
 }

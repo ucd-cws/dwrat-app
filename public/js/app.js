@@ -1073,14 +1073,14 @@ module.exports =
 },{}],"/Users/jrmerz/dev/watershed/dwrat-app/lib/shared/library/index.js":[function(require,module,exports){
 var files = [];
 
-var root = 'https://docs.google.com/spreadsheets/d/1ACi7P0pOy-JRjtw6HribQphhEOZ-0-CkQ_mqnyCfJcI/gviz/tq';
+var public_dir_root = 'https://docs.google.com/spreadsheets/d/1ACi7P0pOy-JRjtw6HribQphhEOZ-0-CkQ_mqnyCfJcI/gviz/tq';
 var popup, body, file, map, toast;
 
 function init(config) {
   file = config.file;
   map = config.map;
 
-  var query = new google.visualization.Query(root);
+  var query = new google.visualization.Query(public_dir_root);
   query.send(onInitLoad);
 
   popup = $('#directory-modal').modal({show: false});

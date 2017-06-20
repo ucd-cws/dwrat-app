@@ -22,3 +22,8 @@ serve data, it does rely on data hosted in three external locations:
 
 Services hosted on CWS infrastructure can be passed to SWRCB for hosting on their ArcGIS servers. The aforementioned features
 must be enabled for each service, and the code should be edited at the mentioned locations to correctly reference the new services.
+
+## Hosting
+The built application lives in the `dist` directory of this repository. To host the application, clone either the entire repository, or 
+just the contents of the `dist` directory into a folder on your server. The only files
+you need to host are the contents of the `dist` directory - everything else is used for development and building of the application.

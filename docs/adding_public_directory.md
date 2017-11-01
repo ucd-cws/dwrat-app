@@ -25,7 +25,12 @@ the other details you want to show in the public view of the spreadsheet, includ
 ## Changing the master spreadsheet
 For administrators of the site, if the spreadsheet used for the Public Directory index needs to be changed, do the following:
 1. Make a new Google Sheet
-2. Share the sheet so that it is publicly viewable, but not publicly editable
-3. Edit the sheet URL into the code by finding the line where public_dir_root is defined - it will start with `var public_dir_root = `.
+2. Add the following fields to this sheet in the first row:
+  * _Region_: The name that shows up when selecting items from the Public Directory in the application
+  * _Start Date_: M/DD/YYYY format date that each record's information starts on
+  * _End Date_: M/DD/YYYY format date that each record's information ends on
+  * _ID_: The ID of the Google Sheet that holds the data for this record, as discussed in *Adding an Item* above.
+3. Share the sheet so that it is publicly viewable, but not publicly editable
+4. Edit the sheet URL into the code by finding the line where public_dir_root is defined - it will start with `var public_dir_root = `.
  As of this writing, the line is in app.js on line 1076, but that is subject to change in future builds.
-4. Relaunch the application
+5. Relaunch the application

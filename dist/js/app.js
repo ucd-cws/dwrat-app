@@ -40,10 +40,10 @@ module.exports.getFeatures = function() {
 var process = require('./process');
 
 var QUERY_SIZE = 1000;
-var queryRoot = 'http://gispublic.waterboards.ca.gov/arcgis/rest/services/Water_Rights/Points_of_Diversion/MapServer/0/query';
-var queryAppIdVar = 'WBGIS.Points_of_Diversion.APPL_ID';
-var queryLatitude = 'WBGIS.Points_of_Diversion.LATITUDE';
-var queryLongitude = 'WBGIS.Points_of_Diversion.LONGITUDE';
+var queryRoot = 'http://gispublic.waterboards.ca.gov/arcgis/rest/services/Water_Rights/Points_of_Diversion/MapServer/1/query';
+var queryAppIdVar = 'APPL_ID';
+var queryLatitude = 'LATITUDE';
+var queryLongitude = 'LONGITUDE';
 var queryOutfields =  [queryAppIdVar, queryLongitude, queryLatitude].join(',');
 
 var queryParams = {

@@ -34,6 +34,6 @@ npm run start-dist
 Documentation on deploying the server can be best found in the [documentation section](./docs/index.md).
 A table of contents is also included below.
 
-* [Setting Up the Core Server](./docs/setting_up_server.md)
-* [Adding Data to the Public Directory](./docs/adding_public_directory.md)
-* [Uploading Data for Viewing in the Interface](./docs/uploading_files.md)
+* [Setting Up the Core Server](./setting_up_server.md)
+* [Adding Data to the Public Directory](./adding_public_directory.md)
+* [System Requirements and Maintenance](system_requirements.md)

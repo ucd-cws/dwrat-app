@@ -13,7 +13,7 @@ serve data, it does rely on data hosted in three external locations:
 2. Center for Watershed Sciences ArcGIS Server
     * http://atlas.cws.ucdavis.edu/arcgis/rest/services/Watersheds/
         * WMS and WFS should be enabled
-        * Currently used in app.js, line 518 for `var lookupUrl` and app.js line 1325 in `var wms2`
+        * Currently used in app.js, line 518 for `var lookupUrl` and app.js line 1340 in `var wms2`
     * http://atlas.cws.ucdavis.edu/arcgis/rest/services/CalWater_Hydrologic_Unit/
         * Standard ArcGIS services enabled
         * Currently used in app.js line 1325 for `var wms1`

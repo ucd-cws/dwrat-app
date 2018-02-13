@@ -295,7 +295,7 @@ module.exports = function(type, contents, callback) {
 },{}],4:[function(require,module,exports){
 var parse = require('./parse');
 
-// names DWR keeps using though we discussed otherwise...
+// other names that could be used in the headers of files from SWRCB
 var previousAttrMap = {
   'application_number' : 'AppID',
   'demand_date' : 'Pull Date',
@@ -1094,38 +1094,75 @@ function init(config) {
   $('body').append(toast);
 }
 
+function getQueryVariable(variable) {
+    /*
+      Shamelessly from https://stackoverflow.com/a/2091331/587938
+      Parses query parameters to make them accessible from the application
+     */
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+    return null;
+    console.log('Query variable %s not found', variable);
+}
+
+function loadFileByID(files, id){
+    /*
+        Given the ID number of a file in the public directory, loads it up!
+     */
+    var file = files[parseInt(id)];
+    load(file.Region+' '+getDates(file), file.ID);
+}
+
 function onInitLoad(resp) {
-  if (resp.isError()) {
-    alert('Error in loading public directory listing: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-    return;
-  }
-
-  var data = resp.getDataTable();
-  var rowLen = data.getNumberOfRows();
-  var colLen = data.getNumberOfColumns();
-
-  var table = '<h4>Select File to Load</h4><table class="table">';
-  table += '<tr><th>Filename</th><th>Start Date</th><th>End Date</th><td></td></tr>';
-  for( var i = 0; i < rowLen; i++ ) {
-    var file = {};
-    for( var j = 0; j < colLen; j++ ) {
-      file[data.getColumnLabel(j)] = data.getValue(i, j);
+    /*
+      This function intializes the public directory table and sets up the listening events when one is clicked.
+      In Feb 2018, Nick added code to the end that made it so that with a URL parameter we can cause a file to autoload
+   */
+    if (resp.isError()) {
+        alert('Error in loading public directory listing: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+        return;
     }
 
-    table += fileToRow(file, i);
+    var data = resp.getDataTable();
+    var rowLen = data.getNumberOfRows();
+    var colLen = data.getNumberOfColumns();
 
-    files.push(file);
-  }
+    var table = '<h4>Select File to Load</h4><table class="table">';
+    table += '<tr><th>Filename</th><th>Start Date</th><th>End Date</th><td></td></tr>';
+    for( var i = 0; i < rowLen; i++ ) {
+        var file = {};
+        for( var j = 0; j < colLen; j++ ) {
+            file[data.getColumnLabel(j)] = data.getValue(i, j);
+        }
 
-  body
-    .html(table+'</table>')
-    .find('a[index]')
-    .on('click', function(){
-      var file = files[parseInt($(this).attr('index'))];
-      load(file.Region+' '+getDates(file), file.ID);
-      popup.modal('hide');
-    });
+        table += fileToRow(file, i);
+
+        files.push(file);
+    }
+
+    // Set up the event handlers for clicking on items in the directory listing.
+    body
+        .html(table+'</table>')
+        .find('a[index]')
+        .on('click', function(){
+            loadFileByID(files, $(this).attr('index'));
+            popup.modal('hide');
+        });
+
+    // URL parameter reading and loading
+
+    var region_load = getQueryVariable("region");
+    if (region_load !== null){
+        loadFileByID(files, region_load);
+    }
 }
+
 
 function getDates(file) {
   if( !file['Start Date'] || !file['End Date'] ) return '';

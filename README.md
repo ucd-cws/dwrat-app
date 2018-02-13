@@ -7,7 +7,15 @@ To develop the standalone dwrat-app, run the following commands.  [NodeJS, NPM](
 One time, init dev environment.  Run on first install or after git pull.
 ```
 npm run init-dev
+
 ```
+
+Note that you may also need to run a separate
+```javascript
+npr install -g grunt-cli
+```
+Nick had success with the main body of these install instructions at least once, but on another occasion had to separately install
+grunt-cli for the following commands to work.
 
 To develop, run:
 ```

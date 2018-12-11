@@ -2,7 +2,7 @@
 [_Back to the Table of Contents_](./index.md)
 
 The "Public Directory" portion of the application is where data can be uploaded for permanent usage - accessible by anyone
-who loads the application. When using the application, these items can be accessed by clicking "Public Dirctory" in the top
+who loads the application. When using the application, these items can be accessed by clicking "Public Directory" in the top
 right corner, then selecting the relevant filename to load data from for display.
 
 ## The master spreadsheet
